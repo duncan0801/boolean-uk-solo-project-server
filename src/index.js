@@ -1,30 +1,29 @@
-require("dotenv").config()
+require("dotenv").config();
+const express = require("express");
+const app = express();
+const http = require("http").createServer(app);
+const PORT = 8000;
+const cors = require("cors");
+const morgan = require("morgan");
+const io = require("socket.io")(http, {
+	cors: {
+		origin: "http://localhost:3000",
+		methods: ["GET", "OPTIONS", "POST"],
+	},
+});
 
-const express = require("express")
-const cors = require("cors")
-const morgan = require("morgan")
+//MIDDLEWARE
+app.disable("x-powered-by");
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 
-const app = express()
+io.on("connection", (socket) => {
+	console.log("new client connected");
+	socket.emit("connection", null);
+});
 
-/* SETUP MIDDLEWARE */
-
-app.disable("x-powered-by")
-
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.use(morgan("dev"))
-
-/* SETUP ROUTES */
-
-app.get("*", (req, res) => {
-  res.json({ ok: true })
-})
-
-/* START SERVER */
-
-const port = process.env.PORT || 3030
-
-app.listen(port, () => {
-  console.log(`\n🚀 Server is running on http://localhost:${port}/\n`)
-})
+http.listen(PORT, () => {
+	console.log(`\n🚀 Server is running on http://localhost:${PORT}/\n`);
+});
