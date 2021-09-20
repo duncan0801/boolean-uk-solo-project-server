@@ -37,13 +37,17 @@ io.on("connection", (socket) => {
 	});
 });
 
-app.get("/lobby", (req, res) => {
-	res.redirect(`lobby/${uuidv4()}`);
-});
+// app.get("/lobby", (req, res) => {
+// 	res.redirect(`lobby/${uuidv4()}`);
+// });
 
-app.get("lobby/:lobbyId", (req, res) => {
-	res.render("room", { roomId: req.params.room });
-});
+// app.get("lobby/:lobbyId", (req, res) => {
+// 	res.render("room", { roomId: req.params.room });
+// });
+
+const usersRouter = require("./users/router");
+
+app.use("/users", usersRouter);
 
 http.listen(PORT, () => {
 	console.log(`\n🚀 Server is running on http://localhost:${PORT}/\n`);
