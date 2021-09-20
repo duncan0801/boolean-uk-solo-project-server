@@ -46,8 +46,10 @@ io.on("connection", (socket) => {
 // });
 
 const usersRouter = require("./users/router");
+const lobbiesRouter = require("./lobbies/router");
 
 app.use("/users", usersRouter);
+app.use("/lobbies", lobbiesRouter);
 
 http.listen(PORT, () => {
 	console.log(`\n🚀 Server is running on http://localhost:${PORT}/\n`);

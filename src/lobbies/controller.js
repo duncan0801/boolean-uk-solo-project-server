@@ -12,4 +12,24 @@ async function getOne(req, res) {
 	}
 }
 
-module.exports = {getOne}
+async function createLobby(req, res) {
+	const { lobbyId, userName } = req.body;
+
+	try {
+		const newLobby = await dbClient.lobby.create({
+			data: {
+				id: lobbyId,
+				users: {
+					create: {
+						userName: userName,
+					},
+				},
+			},
+		});
+		res.json({ newLobby: newLobby });
+	} catch (error) {
+		res.json(error.message);
+	}
+}
+
+module.exports = { getOne, createLobby };

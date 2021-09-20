@@ -1,7 +1,8 @@
-const { getOne } = require("./controller");
+const { getOne,createLobby } = require("./controller");
 const express = require("express");
 const lobbiesRouter = express.Router();
 
-lobbiesRouter.get("lobby/:id", getOne);
+lobbiesRouter.get("/:id", getOne);
+lobbiesRouter.post("/", createLobby)
 
 module.exports = lobbiesRouter;
