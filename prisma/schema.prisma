@@ -12,6 +12,24 @@ generator client {
 }
 
 model User {
-    id       Int    @id @default(autoincrement())
-    userName String @unique
+    id       Int       @id @default(autoincrement())
+    userName String    @unique
+    lobbies  Lobby[]
+    messages Message[]
+}
+
+model Message {
+    id      Int    @id @default(autoincrement())
+    content String
+    userId  Int
+    lobbyId String
+    user    User   @relation(fields: [userId], references: [id])
+    lobby   Lobby  @relation(fields: [lobbyId], references: [id])
+
+}
+
+model Lobby {
+    id       String    @id
+    users    User[]
+    messages Message[]
 }
