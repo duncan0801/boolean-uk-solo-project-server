@@ -11,6 +11,14 @@ async function getOne(req, res) {
 		res.json({ msg: error.message });
 	}
 }
+async function getAll(req, res) {
+	try {
+		const users = await dbClient.user.findMany();
+		res.json(users);
+	} catch (error) {
+		res.json({ msg: error.message });
+	}
+}
 
 async function createUser(req, res) {
 	const { userName } = req.body;
@@ -23,4 +31,4 @@ async function createUser(req, res) {
 	}
 }
 
-module.exports = { getOne, createUser };
+module.exports = { getOne, createUser, getAll };
