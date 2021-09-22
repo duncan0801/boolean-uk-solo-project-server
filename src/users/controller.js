@@ -16,6 +16,7 @@ async function getAll(req, res) {
 		const users = await dbClient.user.findMany();
 		res.json(users);
 	} catch (error) {
+		console.log(error.message);
 		res.json({ msg: error.message });
 	}
 }
@@ -57,6 +58,7 @@ async function addUserToLobby(req, res) {
 			});
 			res.json(newUser);
 		} catch (error) {
+			console.log(error.message);
 			res.json({ msg: error.message });
 		}
 	}
