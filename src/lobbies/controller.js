@@ -1,12 +1,12 @@
 const dbClient = require("../../UTILS/database");
 
-
-
 async function getOne(req, res) {
 	const lobbyId = req.params.id;
 	try {
 		const lobby = await dbClient.lobby.findUnique({
 			where: { id: lobbyId },
+			include: { messages: true },
+			include: { users: true },
 		});
 		res.json(lobby);
 	} catch (error) {
@@ -18,7 +18,7 @@ async function createLobby(req, res) {
 	const { lobbyId, userName } = req.body;
 
 	try {
-		const newLobby = await dbClient.lobby.create({
+		const createLobby = await dbClient.lobby.create({
 			data: {
 				id: lobbyId,
 				users: {
@@ -28,6 +28,12 @@ async function createLobby(req, res) {
 				},
 			},
 		});
+
+		const newLobby = await dbClient.lobby.findUnique({
+			where: { id: createLobby.id },
+			include: { users: true },
+		});
+
 		res.json({ newLobby: newLobby });
 	} catch (error) {
 		res.json(error.message);

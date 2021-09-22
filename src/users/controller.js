@@ -1,9 +1,9 @@
 const dbClient = require("../../UTILS/database");
 
-async function getOne(req, res) {
-	const userId = req.params.id;
+async function getLobbyUsers(req, res) {
+	const lobbyId = req.params.lobbyId;
 	try {
-		const user = await dbClient.lobby.findUnique({
+		const user = await dbClient.lobby.findMany({
 			where: { id: lobbyId },
 		});
 		res.json(user);
@@ -31,4 +31,35 @@ async function createUser(req, res) {
 	}
 }
 
-module.exports = { getOne, createUser, getAll };
+async function addUserToLobby(req, res) {
+	const { userName, lobbyId } = req.body;
+	if (lobbyId) {
+		try {
+			const newUser = await dbClient.user.create({
+				data: {
+					userName: userName,
+					lobby: {
+						connect: {
+							id: lobbyId,
+						},
+					},
+				},
+			});
+			res.json(newUser);
+		} catch (error) {
+			console.log(error.message);
+			res.json({ msg: error.message });
+		}
+	} else {
+		try {
+			const newUser = await dbClient.user.create({
+				data: { userName: userName },
+			});
+			res.json(newUser);
+		} catch (error) {
+			res.json({ msg: error.message });
+		}
+	}
+}
+
+module.exports = { createUser, getAll, addUserToLobby, getLobbyUsers };
