@@ -38,6 +38,7 @@ async function createOne(req, res) {
 
 async function getByLobbyId(req, res) {
 	const { lobbyId } = req.body;
+    console.log("lobbyId used for message fetch", lobbyId)
 	try {
 		const messages = await dbClient.message.findMany({
 			where: {
