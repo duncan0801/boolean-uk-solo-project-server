@@ -15,7 +15,7 @@ async function getOne(req, res) {
 }
 
 async function createLobby(req, res) {
-	const { lobbyId, userName } = req.body;
+	const { lobbyId, userName, avatarURL } = req.body;
 
 	try {
 		const createLobby = await dbClient.lobby.create({
@@ -24,6 +24,7 @@ async function createLobby(req, res) {
 				users: {
 					create: {
 						userName: userName,
+						avatarURL: avatarURL,
 					},
 				},
 			},

@@ -64,4 +64,13 @@ async function addUserToLobby(req, res) {
 	}
 }
 
+async function deleteUser(req,res) {
+    const {id} = req.body
+    try {
+        const deletedUser = await dbClient.user.delete({})
+    } catch (error) {
+        
+    }
+}
+
 module.exports = { createUser, getAll, addUserToLobby, getLobbyUsers };
