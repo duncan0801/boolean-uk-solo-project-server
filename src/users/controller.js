@@ -33,7 +33,7 @@ async function createUser(req, res) {
 }
 
 async function addUserToLobby(req, res) {
-	const { userName, lobbyId } = req.body;
+	const { userName, lobbyId, avatarURL } = req.body;
 	if (lobbyId) {
 		try {
 			const newUser = await dbClient.user.create({
@@ -44,6 +44,7 @@ async function addUserToLobby(req, res) {
 							id: lobbyId,
 						},
 					},
+					avatarURL: avatarURL,
 				},
 			});
 			res.json(newUser);
@@ -64,13 +65,11 @@ async function addUserToLobby(req, res) {
 	}
 }
 
-async function deleteUser(req,res) {
-    const {id} = req.body
-    try {
-        const deletedUser = await dbClient.user.delete({})
-    } catch (error) {
-        
-    }
+async function deleteUser(req, res) {
+	const { id } = req.body;
+	try {
+		const deletedUser = await dbClient.user.delete({});
+	} catch (error) {}
 }
 
 module.exports = { createUser, getAll, addUserToLobby, getLobbyUsers };
