@@ -1,4 +1,4 @@
-const dbClient = require("../../UTILS/database");
+const dbClient = require("../../../UTILS/database");
 
 async function getLobbyUsers(req, res) {
 	const lobbyId = req.params.lobbyId;
@@ -66,10 +66,24 @@ async function addUserToLobby(req, res) {
 }
 
 async function deleteUser(req, res) {
-	const { id } = req.body;
+	const userId = Number(req.params.userId);
 	try {
-		const deletedUser = await dbClient.user.delete({});
-	} catch (error) {}
+		const deletedUser = await dbClient.user.delete({
+			where: {
+				id: userId,
+			},
+		});
+		res.json(deletedUser);
+	} catch (error) {
+		res.json(error.message);
+		console.error(error.message);
+	}
 }
 
-module.exports = { createUser, getAll, addUserToLobby, getLobbyUsers };
+module.exports = {
+	createUser,
+	getAll,
+	addUserToLobby,
+	getLobbyUsers,
+	deleteUser,
+};

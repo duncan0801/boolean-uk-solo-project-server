@@ -13,6 +13,7 @@ const io = require("socket.io")(http, {
 	},
 });
 const STATIC_CHANNELS = ["global_notifications", "global_chat"];
+const { protect } = require("./resources/auth/controller");
 
 //MIDDLEWARE
 app.disable("x-powered-by");
@@ -45,13 +46,15 @@ io.on("connection", (socket) => {
 // 	res.render("room", { roomId: req.params.room });
 // });
 
-const usersRouter = require("./users/router");
-const lobbiesRouter = require("./lobbies/router");
-const messagesRouter = require("./messages/router");
+const usersRouter = require("./resources/users/router");
+const lobbiesRouter = require("./resources/lobbies/router");
+const messagesRouter = require("./resources/messages/router");
+const authRouter = require("./resources/auth/router");
 
-app.use("/users", usersRouter);
+app.use("/users", protect, usersRouter);
 app.use("/lobbies", lobbiesRouter);
 app.use("/messages", messagesRouter);
+app.use("/", authRouter);
 
 http.listen(PORT, () => {
 	console.log(`\n🚀 Server is running on http://localhost:${PORT}/\n`);
