@@ -51,7 +51,7 @@ const lobbiesRouter = require("./resources/lobbies/router");
 const messagesRouter = require("./resources/messages/router");
 const authRouter = require("./resources/auth/router");
 
-app.use("/users", protect, usersRouter);
+app.use("/users", usersRouter);
 app.use("/lobbies", lobbiesRouter);
 app.use("/messages", messagesRouter);
 app.use("/", authRouter);

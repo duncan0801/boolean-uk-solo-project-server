@@ -3,8 +3,8 @@ const dbClient = require("../../../UTILS/database");
 
 async function signup(req, res) {
 	//1. get body
-	const { username, password } = req.body;
-
+	const { username, password, avatarURL } = req.body;
+	console.log(req.body);
 	//2. If there is no email or password then throw a response with an error 404 saying missing username or password
 	if (!username || !password) {
 		res.status(400).json({ error: "Missing email or password." });
@@ -16,11 +16,14 @@ async function signup(req, res) {
 			data: {
 				username: username,
 				password: password,
+				avatarURL: avatarURL,
 			},
 		});
+		console.log(user);
 		res.status(201).json({ user });
 	} catch (error) {
-		console.error("[ERROR] /signup route: ", error);
+		console.log(error.message);
+		console.error("[ERROR] /signup route: ", error.message);
 
 		//4. If error.code === "P2002", throw an error saying that the user already exists, else throw an error with a res.status 500
 		if (error.code === "P2002") {
@@ -32,7 +35,7 @@ async function signup(req, res) {
 		}
 	}
 }
-async function login() {
+async function login(req, res) {
 	// 1. Get body
 	const { username, password } = req.body;
 	// 2. Get the unique user with that username
@@ -58,7 +61,7 @@ async function login() {
 	}
 }
 
-async function protect() {
+async function protect(req, res) {
 	const userId = req.header.authorization;
 
 	const user = await user.findUnique({
