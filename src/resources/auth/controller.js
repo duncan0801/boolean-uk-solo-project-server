@@ -1,6 +1,5 @@
 const { createToken, verifyToken } = require("../../../UTILS/authentication");
 const bcrypt = require("bcrypt");
-const { user } = require("../../../UTILS/database");
 const dbClient = require("../../../UTILS/database");
 
 async function signup(req, res) {
@@ -45,7 +44,6 @@ async function signup(req, res) {
 	}
 }
 async function login(req, res) {
-
 	const { username, password } = req.body;
 
 	try {
@@ -73,8 +71,9 @@ async function login(req, res) {
 				...foundUser,
 			};
 			delete userToTokenize.password;
+			console.log("user", userToTokenize);
 
-			const token = createToken(user);
+			const token = createToken(userToTokenize);
 			console.log("Found user from auth & token", foundUser, token);
 			res.status(201).json(token);
 		} else {
@@ -86,7 +85,8 @@ async function login(req, res) {
 	}
 }
 async function protect(req, res, next) {
-	const bearer = req.header.authorization;
+	const bearer = req.headers.authorization;
+	console.log("bearer", bearer);
 
 	if (!bearer || !bearer.startsWith("Bearer ")) {
 		return res.status(401).end();
@@ -105,7 +105,7 @@ async function protect(req, res, next) {
 
 	console.log("Inside protect: ", { bearer, payload });
 
-	const user = await user.findUnique({
+	const user = await dbClient.user.findUnique({
 		where: {
 			id: payload.id,
 		},
@@ -119,7 +119,7 @@ async function protect(req, res, next) {
 		return res.status(401).end();
 	}
 
-	req.body = user;
+	req.user = user;
 	next();
 }
 

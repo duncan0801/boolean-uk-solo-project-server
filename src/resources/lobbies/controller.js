@@ -14,6 +14,25 @@ async function getOne(req, res) {
 	}
 }
 
+async function getLobbiesByUserId(req, res) {
+	const user = req.user;
+	try {
+		const userLobbies = await dbClient.lobby.findMany({
+			where: {
+				users: {
+					some: {
+						id: user.id,
+					},
+				},
+			},
+		});
+		console.log(userLobbies);
+		res.json(userLobbies);
+	} catch (error) {
+		console.error(error.message);
+	}
+}
+
 async function createLobby(req, res) {
 	const { lobbyId, userName, avatarURL } = req.body;
 
@@ -41,4 +60,4 @@ async function createLobby(req, res) {
 	}
 }
 
-module.exports = { getOne, createLobby };
+module.exports = { getOne, createLobby, getLobbiesByUserId };
