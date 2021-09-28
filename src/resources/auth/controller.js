@@ -1,3 +1,4 @@
+const { createToken, verifyToken } = require("../../../UTILS/authentication");
 const bcrypt = require("bcrypt");
 const { user } = require("../../../UTILS/database");
 const dbClient = require("../../../UTILS/database");
@@ -21,10 +22,14 @@ async function signup(req, res) {
 				password: securePassword,
 				avatarURL: avatarURL,
 			},
+			select: {
+				id: true,
+				avatarURL: true,
+			},
 		});
-
+		const token = createToken(user);
 		console.log(user);
-		res.status(201).json({ user });
+		res.status(201).json({ token });
 	} catch (error) {
 		console.log(error.message);
 		console.error("[ERROR] /signup route: ", error.message);
@@ -40,48 +45,81 @@ async function signup(req, res) {
 	}
 }
 async function login(req, res) {
-	// 1. Get body
+
 	const { username, password } = req.body;
-	// 2. Get the unique user with that username
-	//      if no user, return an error saying there is no such user
 
 	try {
 		const foundUser = await dbClient.user.findUnique({
 			where: {
 				username: username,
 			},
+			select: {
+				id: true,
+				avatarURL: true,
+				password: true,
+			},
 		});
+		console.log("foundUser ", foundUser);
 		if (!foundUser) {
 			res.status(401).json({ error: "Authentication failed" });
 			console.error("Authentication failed");
 		}
 
 		const match = await bcrypt.compare(password, foundUser.password);
+		console.log("match ", match);
 
 		if (match) {
-			res.status(201).json(foundUser);
-			console.log(foundUser);
+			const userToTokenize = {
+				...foundUser,
+			};
+			delete userToTokenize.password;
+
+			const token = createToken(user);
+			console.log("Found user from auth & token", foundUser, token);
+			res.status(201).json(token);
 		} else {
 			res.status(401).json({ error: "Authentication failed" });
 			console.error("Authentication failed");
 		}
 	} catch (error) {
-		res.status(500).json({ error });
+		res.status(500).json(error.message);
 	}
 }
-
 async function protect(req, res, next) {
-	const userId = req.header.authorization;
+	const bearer = req.header.authorization;
+
+	if (!bearer || !bearer.startsWith("Bearer ")) {
+		return res.status(401).end();
+	}
+
+	const token = bearer.split("Bearer ")[1].trim();
+
+	let payload = null;
+
+	try {
+		payload = await verifyToken(token);
+	} catch (error) {
+		console.error({ error });
+		return res.status(401).end();
+	}
+
+	console.log("Inside protect: ", { bearer, payload });
 
 	const user = await user.findUnique({
 		where: {
-			id: Number(userId),
+			id: payload.id,
+		},
+		select: {
+			id: true,
+			avatarURL: true,
 		},
 	});
 
 	if (!user) {
 		return res.status(401).end();
 	}
+
+	req.body = user;
 	next();
 }
 

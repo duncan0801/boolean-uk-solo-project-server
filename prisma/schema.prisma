@@ -32,6 +32,7 @@ model Message {
 
 model Lobby {
     id       String        @id
+    name     String
     users    UserOnLobby[]
     messages Message[]
 }

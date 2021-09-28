@@ -11,6 +11,26 @@ async function getLobbyUsers(req, res) {
 		res.json({ msg: error.message });
 	}
 }
+async function getUser(req, res) {
+	const {id} = req.body;
+	console.log("req.body", id);
+
+	try {
+		const foundUser = await dbClient.foundUser.findUnique({
+			where: {
+				id: user.id,
+			},
+			include: {
+				messages: true,
+				lobbies: true,
+			},
+		});
+		console.log("found user in user controller", user);
+		res.json(user);
+	} catch (error) {
+		res.json({ msg: error.message });
+	}
+}
 async function getAll(req, res) {
 	try {
 		const users = await dbClient.user.findMany();
@@ -83,6 +103,7 @@ async function deleteUser(req, res) {
 module.exports = {
 	createUser,
 	getAll,
+	getUser,
 	addUserToLobby,
 	getLobbyUsers,
 	deleteUser,
