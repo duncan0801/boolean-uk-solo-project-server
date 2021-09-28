@@ -1,3 +1,4 @@
+const bcrypt = require("bcrypt");
 const { user } = require("../../../UTILS/database");
 const dbClient = require("../../../UTILS/database");
 
@@ -12,13 +13,16 @@ async function signup(req, res) {
 
 	//3. Have a try catch that will try to create a new user with the database, if not thrown an error
 	try {
+		const securePassword = await bcrypt.hash(password, 8);
+
 		const user = await dbClient.user.create({
 			data: {
 				username: username,
-				password: password,
+				password: securePassword,
 				avatarURL: avatarURL,
 			},
 		});
+
 		console.log(user);
 		res.status(201).json({ user });
 	} catch (error) {
@@ -40,6 +44,7 @@ async function login(req, res) {
 	const { username, password } = req.body;
 	// 2. Get the unique user with that username
 	//      if no user, return an error saying there is no such user
+
 	try {
 		const foundUser = await dbClient.user.findUnique({
 			where: {
@@ -48,20 +53,24 @@ async function login(req, res) {
 		});
 		if (!foundUser) {
 			res.status(401).json({ error: "Authentication failed" });
+			console.error("Authentication failed");
 		}
 
-		// 3. If the user is back, check the password from the body with user password, if not throw a invalid email or password error
-		if (password === foundUser.password) {
-			res.status(201).json({ user });
+		const match = await bcrypt.compare(password, foundUser.password);
+
+		if (match) {
+			res.status(201).json(foundUser);
+			console.log(foundUser);
 		} else {
 			res.status(401).json({ error: "Authentication failed" });
+			console.error("Authentication failed");
 		}
 	} catch (error) {
 		res.status(500).json({ error });
 	}
 }
 
-async function protect(req, res) {
+async function protect(req, res, next) {
 	const userId = req.header.authorization;
 
 	const user = await user.findUnique({
