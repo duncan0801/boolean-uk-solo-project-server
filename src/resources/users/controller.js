@@ -12,7 +12,7 @@ async function getLobbyUsers(req, res) {
 	}
 }
 async function getUser(req, res) {
-	const {id} = req.body;
+	const { id } = req.body;
 	console.log("req.body", id);
 
 	try {
@@ -53,35 +53,19 @@ async function createUser(req, res) {
 }
 
 async function addUserToLobby(req, res) {
-	const { userName, lobbyId, avatarURL } = req.body;
-	if (lobbyId) {
-		try {
-			const newUser = await dbClient.user.create({
-				data: {
-					userName: userName,
-					lobby: {
-						connect: {
-							id: lobbyId,
-						},
-					},
-					avatarURL: avatarURL,
-				},
-			});
-			res.json(newUser);
-		} catch (error) {
-			console.log(error.message);
-			res.json({ msg: error.message });
-		}
-	} else {
-		try {
-			const newUser = await dbClient.user.create({
-				data: { userName: userName },
-			});
-			res.json(newUser);
-		} catch (error) {
-			console.log(error.message);
-			res.json({ msg: error.message });
-		}
+	const userId = Number(req.body.userId);
+	const lobbyId = req.body.lobbyId;
+	try {
+		const userOnLobby = await dbClient.userOnLobby.create({
+			data: {
+				userId: userId,
+				lobbyId: lobbyId,
+			},
+		});
+        res.json(userOnLobby)
+	} catch (error) {
+		console.log(error);
+		res.json({ msg: error.message });
 	}
 }
 
