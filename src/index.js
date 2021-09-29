@@ -6,9 +6,10 @@ const PORT = 8000;
 const cors = require("cors");
 const morgan = require("morgan");
 const { v4: uuidv4 } = require("uuid");
+const reactAppURL = process.env.REACT_APP_API_URL;
 const io = require("socket.io")(http, {
 	cors: {
-		origin: "http://localhost:3000",
+		origin: reactAppURL,
 		methods: ["GET", "OPTIONS", "POST"],
 	},
 });

@@ -16,6 +16,7 @@ async function getOne(req, res) {
 
 async function getLobbiesByUserId(req, res) {
 	const user = req.user;
+	console.log(user.id);
 	try {
 		const userLobbies = await dbClient.lobby.findMany({
 			where: {
@@ -25,8 +26,11 @@ async function getLobbiesByUserId(req, res) {
 					},
 				},
 			},
+			include: {
+				users: true,
+			},
 		});
-		console.log(userLobbies);
+		console.log("userLobbies:", userLobbies);
 		res.json(userLobbies);
 	} catch (error) {
 		console.error(error.message);
@@ -34,16 +38,17 @@ async function getLobbiesByUserId(req, res) {
 }
 
 async function createLobby(req, res) {
-	const { lobbyId, userName, avatarURL } = req.body;
+	const user = req.user
+    const lobbyName = req.lobbyName
 
 	try {
 		const createLobby = await dbClient.lobby.create({
 			data: {
 				id: lobbyId,
+                name: lobbyName,
 				users: {
-					create: {
-						userName: userName,
-						avatarURL: avatarURL,
+					connect: {
+						id: user.id,
 					},
 				},
 			},
