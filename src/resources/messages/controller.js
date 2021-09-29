@@ -11,13 +11,15 @@ async function getOne(req, res) {
 }
 
 async function createOne(req, res) {
-	const { userName, lobbyId, content } = req.body;
+    const userId = Number(req.body.userId)
+    const lobbyId = req.body.lobbyId
+    const content = req.body.content
 	try {
 		const newMessage = await dbClient.message.create({
 			data: {
 				user: {
 					connect: {
-						userName: userName,
+						id: userId,
 					},
 				},
 				lobby: {
@@ -38,7 +40,7 @@ async function createOne(req, res) {
 
 async function getByLobbyId(req, res) {
 	const { lobbyId } = req.body;
-    console.log("lobbyId used for message fetch", lobbyId)
+	console.log("lobbyId used for message fetch", lobbyId);
 	try {
 		const messages = await dbClient.message.findMany({
 			where: {
