@@ -1,6 +1,6 @@
 export const backEndPort = 8000;
+const backendURL = process.env.REACT_APP_BACKEND_API_URL
 
-export const baseURL = "http://localhost:8000";
 function handleErrors(res) {
 	if (!res.ok) {
 		throw Error(res.statusText);
@@ -8,7 +8,7 @@ function handleErrors(res) {
 	return res.json();
 }
 function genericFetch(endpoint) {
-	fetch(`http://localhost:8000/lobbies`)
+	fetch(`${backendURL}/lobbies`)
 		.then((res) => console.log(res.json()))
 		.catch((error) => console.error(error));
 }

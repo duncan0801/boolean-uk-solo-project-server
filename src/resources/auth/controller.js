@@ -5,7 +5,6 @@ const dbClient = require("../../../UTILS/database");
 async function signup(req, res) {
 	//1. get body
 	const { username, password, avatarURL } = req.body;
-	console.log(req.body);
 	//2. If there is no email or password then throw a response with an error 404 saying missing username or password
 	if (!username || !password) {
 		res.status(400).json({ error: "Missing email or password." });
@@ -27,7 +26,6 @@ async function signup(req, res) {
 			},
 		});
 		const token = createToken(user);
-		console.log(user);
 		res.status(201).json({ token });
 	} catch (error) {
 		console.log(error.message);
@@ -57,14 +55,14 @@ async function login(req, res) {
 				password: true,
 			},
 		});
-		console.log("foundUser ", foundUser);
 		if (!foundUser) {
 			res.status(401).json({ error: "Authentication failed" });
 			console.error("Authentication failed");
 		}
 
 		const match = await bcrypt.compare(password, foundUser.password);
-		console.log("match ", match);
+
+
 
 		if (match) {
 			const userToTokenize = {
@@ -86,7 +84,6 @@ async function login(req, res) {
 }
 async function protect(req, res, next) {
 	const bearer = req.headers.authorization;
-	console.log("bearer", bearer);
 
 	if (!bearer || !bearer.startsWith("Bearer ")) {
 		return res.status(401).end();
@@ -118,8 +115,8 @@ async function protect(req, res, next) {
 	if (!user) {
 		return res.status(401).end();
 	}
-
 	req.user = user;
+    console.log("user passing from protect", user)
 	next();
 }
 

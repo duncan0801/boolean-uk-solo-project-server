@@ -5,6 +5,6 @@ const lobbiesRouter = express.Router();
 
 lobbiesRouter.get("/:id", getOne);
 lobbiesRouter.get("/", protect, getLobbiesByUserId);
-lobbiesRouter.post("/", createLobby);
+lobbiesRouter.post("/", protect, createLobby);
 
 module.exports = lobbiesRouter;
