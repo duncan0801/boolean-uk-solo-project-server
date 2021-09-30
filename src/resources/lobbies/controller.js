@@ -91,5 +91,31 @@ async function createLobby(req, res) {
 		res.json(error);
 	}
 }
+async function deleteLobbyOnUser(req, res) {
+	const userId = Number(req.body.userId);
+	const lobbyId = req.params.lobbyId;
 
-module.exports = { getOne, createLobby, getLobbiesByUserId };
+	try {
+		const lobbyOnUsers = await dbClient.userOnLobby.findMany()
+
+		const lobbyOnUserToDelete = lobbyOnUsers.find((lobbyOnUser) => {
+			return (
+				lobbyOnUser.userId === userId && lobbyOnUser.lobbyId === lobbyId
+			);
+		});
+
+		const deletedUserOnLobby = await dbClient.userOnLobby.delete({
+			where: {
+				id: lobbyOnUserToDelete.id,
+			},
+		});
+		console.log("lobbyOnUsers", lobbyOnUsers);
+		console.log("lobbyOnUserToDelete", lobbyOnUserToDelete);
+		console.log("deletedUserOnLobby", deletedUserOnLobby);
+		res.json(deletedUserOnLobby);
+	} catch (error) {
+		res.json(error.message);
+	}
+}
+
+module.exports = { getOne, createLobby, getLobbiesByUserId, deleteLobbyOnUser };
