@@ -39,7 +39,7 @@ async function createOne(req, res) {
 }
 
 async function getByLobbyId(req, res) {
-	const { lobbyId } = req.body;
+	const lobbyId = req.params.lobbyId;
 	console.log("lobbyId used for message fetch", lobbyId);
 	try {
 		const messages = await dbClient.message.findMany({
@@ -47,7 +47,7 @@ async function getByLobbyId(req, res) {
 				lobbyId: lobbyId,
 			},
 		});
-		console.log(messages);
+		console.log("Messages", messages);
 		res.json(messages);
 	} catch (error) {
 		console.log(error.message);

@@ -9,7 +9,7 @@ function handleErrors(res) {
 }
 function genericFetch(endpoint) {
 	fetch(`${backendURL}/lobbies`)
-		.then((res) => console.log(res.json()))
+		.then((res) => res.json())
 		.catch((error) => console.error(error));
 }
 function genericFetchById(endpoint, id) {
@@ -18,7 +18,6 @@ function genericFetchById(endpoint, id) {
 		.catch((error) => console.error(error));
 }
 export function genericPost(endpoint, body) {
-	console.log(`${baseURL}${endpoint}`);
 // 	fetch(`${baseURL}${endpoint}`, {
 // 		method: "POST",
 // 		headers: {
