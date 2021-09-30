@@ -1,7 +1,6 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-const http = require("http").createServer(app);
 const PORT = process.env.PORT || 8000;
 const cors = require("cors");
 const morgan = require("morgan");
@@ -35,6 +34,6 @@ app.use("/lobbies", lobbiesRouter);
 app.use("/messages", messagesRouter);
 app.use("/", authRouter);
 
-http.listen(PORT, () => {
+app.listen(PORT, () => {
 	console.log(`\n🚀 Server is running on http://localhost:${PORT}/\n`);
 });
