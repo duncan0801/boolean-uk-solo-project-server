@@ -15,18 +15,18 @@ After downloading this repo along with the <a href="https://github.com/duncan080
 # Planning Process
 
 ## The Idea
-I wanted to be ble to have a place to where friends could gather and play games as well as have a channel for chat within the group members.
+I wanted to be able to have a place to where friends could gather and play games as well as have a channel for chat within the group members. And so I decided to build this project!
 
 ## User Stories 
 <ol>
-  A user should be bale to:
-  <li>Sign up and log in with a username and password</li>
-  <li>Create their own lobby</li>
-  <li>Join another lobby with a lobby ID</li>
-  <li>Send messages within a lobby</li>
-  <li>View what users are a part of the lobby</li>
-  <li>Leave the lobby</li>
-  <li>Log out</li>
+A user should be bale to:
+  <li>Sign up and log in with a username and password.</li>
+  <li>Create their own lobby.</li>
+  <li>Join another lobby with a lobby ID.</li>
+  <li>Send messages within a lobby.</li>
+  <li>View what users are a part of the lobby.</li>
+  <li>Leave the lobby.</li>
+  <li>Log out.</li>
 </ol>
 
 ## Wireframes
@@ -41,5 +41,13 @@ I wanted to be ble to have a place to where friends could gather and play games 
 ## Entity Relationship Diagram
 
 ![alt-text](https://github.com/duncan0801/boolean-uk-solo-project-server/blob/master/src/ReadMe%20Stuff/Data%20Model.JPG?raw=true)
+
+# Future Work
+
+<ol>
+  <li>Add a set timeout to fetch from the database very 3s to try to mimic a real time websocket connection.</li>
+  <li>Add in a feature to be able to change the username and password</li>
+  <li>Add in more games like checkers, tic-tac-toe, connect four etc</li>
+</ol>
 
 
