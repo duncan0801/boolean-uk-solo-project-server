@@ -8,8 +8,8 @@ Please feel free to have a look at the app <a href="https://social-game-lobby.ne
 # Local Set up
 After downloading this repo along with the <a href="https://github.com/duncan0801/boolean-uk-solo-project-client">client side repo</a>, in your local environment in both the server and client folder:
 <ol>
-  <li>``npm i`` to install the required node modules</li>
-  <li>``npm start`` to start the server/ react server</li>
+  <li>```npm i``` to install the required node modules</li>
+  <li>```npm start``` to start the server/ react server</li>
 </ol>
 
 # Planning Process
